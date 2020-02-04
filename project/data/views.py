@@ -3,6 +3,7 @@ from data.models import Urls
 from data.serializers import UrlsSerializer
 from rest_framework import generics
 from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import redirect
 
 class UrlsListCreate(generics.ListCreateAPIView):
     queryset = Urls.objects.all()
@@ -15,4 +16,4 @@ class UrlsDelete(generics.DestroyAPIView):
 
 def url_redirect(request, pk):
     long_url = Urls.objects.get(short_url=pk)
-    return HttpResponse(long_url)
+    return redirect(str(long_url))
