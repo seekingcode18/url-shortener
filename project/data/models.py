@@ -8,3 +8,5 @@ class Urls(models.Model):
     short_url = models.CharField(max_length = 6, primary_key = True, default = pkgen)
     long_url = models.CharField(max_length = 500)
 
+    def __str__(self):
+        return self.long_url
