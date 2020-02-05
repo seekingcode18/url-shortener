@@ -5,6 +5,8 @@ import requests
 import http
 import json
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -33,3 +35,7 @@ class Register(generic.CreateView):
 
 def profile(request):
     return render(request, 'profile.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
