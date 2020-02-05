@@ -16,8 +16,6 @@ def index(request):
 
 def post(request):
     long_url = request.POST.get("long_url", "")
-    print('request')
-    print(request.user.id)
     try:
         r = requests.get(long_url)
         if r.status_code == 200:
@@ -32,13 +30,10 @@ def post(request):
 
 def post_auth(request):
     long_url = request.POST.get("long_url", "")
-    print('post_auth request')
-    print(request.META)
-    print(request.user)
     try:
         r = requests.get(long_url)
         if r.status_code == 200:
-            response = requests.post('http://localhost:8000/api/urls_auth/', data = {"long_url": str(long_url), "user_id": request.user.id})
+            response = requests.post('http://localhost:8000/api/urls_auth/', data = {"long_url": str(long_url), "user": request.user.id})
             if 'short_url' in response.json():
                 short_url = response.json()['short_url']
                 return render(request, 'index.html', {'short_url': 'http://localhost:8000/auth/{0}'.format(short_url)})
@@ -53,6 +48,13 @@ class Register(generic.CreateView):
     template_name = 'register.html'
 
 def profile(request):
+    if request.user:
+        response = requests.get('http://localhost:8000/api/urls/user/?id='+ str(request.user.id))
+        if response.status_code == 200:
+            urls = response.json()
+            print(urls)
+        else:
+            print('error')
     return render(request, 'profile.html')
 
 def logout_view(request):

@@ -28,3 +28,10 @@ def url_redirect(request, pk):
 def url_auth_redirect(request, pk):
     long_url = UrlsAuth.objects.get(short_url=pk)
     return redirect(str(long_url))
+
+class UsersUrlsList(generics.ListAPIView):
+    serializer_class = UrlsAuthSerializer
+    
+    def get_queryset(self):
+        user = self.kwargs['id']
+        return UrlsAuth.objects.filter(user)
