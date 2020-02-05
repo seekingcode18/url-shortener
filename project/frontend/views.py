@@ -4,6 +4,9 @@ from django.core.exceptions import ValidationError
 import requests
 import http
 import json
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views import generic
 
 def index(request):
     return render(request, 'index.html')
@@ -23,4 +26,10 @@ def post(request):
     except:
         return render(request,'index.html', {"error": "please enter a valid url"})
 
-    
+class Register(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'register.html'
+
+def profile(request):
+    return render(request, 'profile.html')
