@@ -16,10 +16,12 @@ def index(request):
 
 def post(request):
     long_url = request.POST.get("long_url", "")
+    print('request')
+    print(request.user.id)
     try:
         r = requests.get(long_url)
         if r.status_code == 200:
-            response = requests.post('http://localhost:8000/api/urls/', data = {"long_url": str(long_url)})
+            response = requests.post('http://localhost:8000/api/urls_auth/', data = {"long_url": str(long_url)})
             if 'short_url' in response.json():
                 short_url = response.json()['short_url']
                 return render(request, 'index.html', {'short_url': 'http://localhost:8000/{0}'.format(short_url)})
@@ -30,13 +32,16 @@ def post(request):
 
 def post_auth(request):
     long_url = request.POST.get("long_url", "")
+    print('post_auth request')
+    print(request.META)
+    print(request.user)
     try:
         r = requests.get(long_url)
         if r.status_code == 200:
-            response = requests.post('http://localhost:8000/api/urls/', data = {"long_url": str(long_url)})
+            response = requests.post('http://localhost:8000/api/urls_auth/', data = {"long_url": str(long_url), "user_id": request.user.id})
             if 'short_url' in response.json():
                 short_url = response.json()['short_url']
-                return render(request, 'index.html', {'short_url': 'http://localhost:8000/{0}'.format(short_url)})
+                return render(request, 'index.html', {'short_url': 'http://localhost:8000/auth/{0}'.format(short_url)})
         else:
             return render(request, 'index.html', {"error": "something went wrong"})
     except:

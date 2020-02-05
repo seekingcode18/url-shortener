@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if user.is_authenticated %}
+    <form action="/submit_auth" method="POST">
+        {% csrf_token %}
+        <input type="url" name="long_url" id="long_url" placeholder="https://example.com" pattern="*.*"
+            maxlength="500" required>
+        <input type="submit" value="shorten">
+    </form>
+    <p>{{ error }}</p>
+    <a href="{{ short_url }}"> {{ short_url }}</a>
+{% else %}
     <form action="/submit" method="POST">
         {% csrf_token %}
         <input type="url" name="long_url" id="long_url" placeholder="https://example.com" pattern="*.*"
@@ -8,4 +18,5 @@
     </form>
     <p>{{ error }}</p>
     <a href="{{ short_url }}"> {{ short_url }}</a>
+{% endif %}
 {% endblock %}
